@@ -1,0 +1,75 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Lokalmart Odoo AI Bridge",
+    "version": "0.1.0",
+    "description": "Read-first API bridge for inspecting Odoo Lokalmart safely. All write methods are intentionally blocked."
+  },
+  "servers": [
+    { "url": "https://YOUR-VERCEL-APP.vercel.app" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "LokalmartBridgeToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-LM-ADMIN-TOKEN"
+      }
+    }
+  },
+  "paths": {
+    "/api/bridge": {
+      "post": {
+        "operationId": "lokalmartBridge",
+        "summary": "Run a read-only Lokalmart Odoo bridge action",
+        "security": [{ "LokalmartBridgeToken": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": ["ping", "rpc", "schema_scan", "context_export", "audit", "manifest", "health"]
+                  },
+                  "model": { "type": "string" },
+                  "method": { "type": "string" },
+                  "args": { "type": "array" },
+                  "kwargs": { "type": "object" },
+                  "limit": { "type": "integer", "minimum": 1, "maximum": 1500 },
+                  "sections": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                },
+                "required": ["action"]
+              },
+              "examples": {
+                "ping": { "value": { "action": "ping" } },
+                "context_export": { "value": { "action": "context_export", "limit": 300 } },
+                "audit": { "value": { "action": "audit", "limit": 300 } },
+                "read_products": {
+                  "value": {
+                    "action": "rpc",
+                    "model": "product.template",
+                    "method": "search_read",
+                    "args": [[ ["active", "=", true] ]],
+                    "kwargs": { "fields": ["id", "name", "default_code", "barcode", "list_price"], "limit": 10 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Bridge response" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Blocked write method or forbidden action" },
+          "502": { "description": "Odoo RPC error" }
+        }
+      }
+    }
+  }
+}
