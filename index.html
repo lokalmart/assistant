@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asisten Lokalmart — Odoo AI Bridge</title>
+  <style>
+    :root {
+      --bg: #f7f2e8;
+      --card: #fffaf0;
+      --ink: #2b2418;
+      --muted: #796d5b;
+      --line: rgba(43, 36, 24, .12);
+      --accent: #9a5b24;
+      --accent2: #315f43;
+      --danger: #9f2f2f;
+      --shadow: 0 20px 60px rgba(43, 36, 24, .12);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ffe4b9, transparent 32rem), var(--bg);
+      color: var(--ink);
+    }
+    .shell { max-width: 1160px; margin: 0 auto; padding: 24px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+    .panel {
+      background: rgba(255,250,240,.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(8px);
+    }
+    h1 { font-size: clamp(28px, 5vw, 54px); line-height: .95; margin: 0 0 14px; letter-spacing: -1.2px; }
+    h2 { margin: 0 0 12px; font-size: 18px; }
+    p { color: var(--muted); line-height: 1.55; margin: 0 0 12px; }
+    .badge { display: inline-flex; gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; color: var(--accent2); background: #fffdf6; font-weight: 700; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 20px; align-items: start; }
+    label { display: block; font-size: 13px; font-weight: 800; color: var(--ink); margin: 14px 0 8px; }
+    input, textarea, select {
+      width: 100%; border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px;
+      font: inherit; background: #fffef9; color: var(--ink); outline: none;
+    }
+    textarea { min-height: 280px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+    input:focus, textarea:focus { border-color: rgba(154,91,36,.55); box-shadow: 0 0 0 4px rgba(154,91,36,.10); }
+    .row { display: grid; grid-template-columns: 1fr 120px; gap: 10px; }
+    .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    button {
+      border: 0; border-radius: 16px; padding: 13px 14px; font-weight: 900; cursor: pointer;
+      color: #fff; background: var(--accent); box-shadow: 0 10px 25px rgba(154,91,36,.18);
+    }
+    button.secondary { background: var(--accent2); }
+    button.light { background: #fff; color: var(--ink); border: 1px solid var(--line); box-shadow: none; }
+    button.danger { background: var(--danger); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .status { margin-top: 12px; padding: 12px 14px; border-radius: 16px; background: #fff; border: 1px solid var(--line); color: var(--muted); font-size: 13px; white-space: pre-wrap; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+    .mini { border: 1px solid var(--line); background: #fffdf7; border-radius: 18px; padding: 14px; }
+    .mini strong { display: block; margin-bottom: 6px; }
+    .mini span { color: var(--muted); font-size: 13px; line-height: 1.4; display: block; }
+    .checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+    .check { display: flex; gap: 8px; align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: #fffdf7; font-size: 13px; font-weight: 700; }
+    .check input { width: auto; }
+    .footer { margin: 22px 0 0; color: var(--muted); font-size: 12px; }
+    @media (max-width: 860px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      .shell { padding: 14px; }
+      .panel { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="panel">
+        <span class="badge">Read-first · Odoo AI Bridge · v0.1.0</span>
+        <h1>Asisten Lokalmart untuk membaca Odoo.</h1>
+        <p>App ini menjadi jembatan aman antara Odoo Lokalmart dan AI. Ia tidak membuat, mengubah, atau menghapus record. Tugasnya membaca struktur, mengekspor konteks, dan membuat audit awal agar file bisa kamu kirim ke ChatGPT.</p>
+        <div class="cards">
+          <div class="mini"><strong>1. Scan</strong><span>Baca model dan field Odoo, termasuk custom <code>x_</code>.</span></div>
+          <div class="mini"><strong>2. Export</strong><span>Buat context JSON untuk dianalisis Asisten Lokalmart.</span></div>
+          <div class="mini"><strong>3. Audit</strong><span>Temukan data kosong, duplikat barcode, dan risiko struktur.</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Koneksi</h2>
+        <p>Credential Odoo disimpan di Environment Variables Vercel. UI hanya butuh token admin bridge.</p>
+        <label for="endpoint">Endpoint</label>
+        <input id="endpoint" value="/api/bridge" />
+        <label for="token">LM_ADMIN_TOKEN</label>
+        <input id="token" type="password" placeholder="Tempel token rahasia bridge" />
+        <div class="row">
+          <div>
+            <label for="limit">Limit per section</label>
+            <input id="limit" type="number" min="1" max="1500" value="300" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="light" onclick="saveSettings()">Simpan</button>
+          </div>
+        </div>
+        <div class="status" id="status">Belum ada request.</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Aksi Bridge</h2>
+        <p>Pilih aksi yang kamu butuhkan. Untuk dikirim ke ChatGPT, yang paling penting adalah <b>Context Export</b> dan <b>Audit</b>.</p>
+
+        <div class="actions">
+          <button onclick="runAction('health')" class="light">Health</button>
+          <button onclick="runAction('ping')">Ping Odoo</button>
+          <button onclick="runAction('schema_scan')" class="secondary">Schema Scan</button>
+          <button onclick="runAction('context_export')" class="secondary">Context Export</button>
+          <button onclick="runAction('audit')">Audit Data</button>
+          <button onclick="copyAssistantPrompt()" class="light">Copy Prompt</button>
+        </div>
+
+        <label>Sections untuk context export</label>
+        <div class="checks" id="sections"></div>
+
+        <label for="rpcBox">Read-only RPC opsional</label>
+        <textarea id="rpcBox">{
+  "action": "rpc",
+  "model": "product.template",
+  "method": "search_read",
+  "args": [[ ["active", "=", true] ]],
+  "kwargs": {
+    "fields": ["id", "name", "default_code", "barcode", "list_price", "categ_id"],
+    "limit": 10
+  }
+}</textarea>
+        <div class="actions">
+          <button onclick="runRpcBox()" class="secondary">Run RPC JSON</button>
+          <button onclick="clearOutput()" class="danger">Bersihkan Output</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Output JSON</h2>
+        <p>Download hasilnya lalu upload ke ChatGPT agar Asisten Lokalmart bisa membaca kondisi Odoo.</p>
+        <textarea id="output" placeholder="Hasil request akan muncul di sini..."></textarea>
+        <div class="actions">
+          <button onclick="downloadOutput('lokalmart_context_export.json')">Download JSON</button>
+          <button onclick="copyOutput()" class="light">Copy JSON</button>
+        </div>
+      </div>
+    </section>
+    <p class="footer">Catatan keamanan: jangan sebarkan token, jangan memakai token di query URL publik, dan gunakan API key Odoo khusus integrasi dengan hak akses seperlunya.</p>
+  </main>
+
+  <script>
+    const sectionKeys = [
+      ['product_categories_technical', 'Kategori teknis'],
+      ['product_categories_ecommerce', 'Kategori ecommerce'],
+      ['products', 'Produk'],
+      ['partners', 'Partner/UMKM'],
+      ['projects', 'Project'],
+      ['tasks', 'Task'],
+      ['custom_models', 'Custom model'],
+      ['custom_fields', 'Custom field'],
+      ['website_pages', 'Website page'],
+      ['website_views_lokalmart', 'View lokal']
+    ];
+    let lastPayload = null;
+
+    function init() {
+      document.getElementById('token').value = localStorage.getItem('lm_bridge_token') || '';
+      document.getElementById('endpoint').value = localStorage.getItem('lm_bridge_endpoint') || '/api/bridge';
+      document.getElementById('limit').value = localStorage.getItem('lm_bridge_limit') || '300';
+      const saved = JSON.parse(localStorage.getItem('lm_bridge_sections') || 'null') || sectionKeys.map(s => s[0]);
+      document.getElementById('sections').innerHTML = sectionKeys.map(([key, label]) => `
+        <label class="check"><input type="checkbox" value="${key}" ${saved.includes(key) ? 'checked' : ''}/> ${label}</label>
+      `).join('');
+    }
+
+    function selectedSections() {
+      return [...document.querySelectorAll('#sections input:checked')].map(el => el.value);
+    }
+
+    function saveSettings() {
+      localStorage.setItem('lm_bridge_token', document.getElementById('token').value.trim());
+      localStorage.setItem('lm_bridge_endpoint', document.getElementById('endpoint').value.trim() || '/api/bridge');
+      localStorage.setItem('lm_bridge_limit', document.getElementById('limit').value || '300');
+      localStorage.setItem('lm_bridge_sections', JSON.stringify(selectedSections()));
+      setStatus('Pengaturan disimpan di browser ini.');
+    }
+
+    function setStatus(text) { document.getElementById('status').textContent = text; }
+    function setOutput(obj) {
+      lastPayload = obj;
+      document.getElementById('output').value = JSON.stringify(obj, null, 2);
+    }
+    function clearOutput() { lastPayload = null; document.getElementById('output').value = ''; setStatus('Output dibersihkan.'); }
+
+    async function postBridge(payload) {
+      saveSettings();
+      const endpoint = document.getElementById('endpoint').value.trim() || '/api/bridge';
+      const token = document.getElementById('token').value.trim();
+      setStatus('Menghubungi bridge...');
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-LM-ADMIN-TOKEN': token },
+        body: JSON.stringify(payload)
+      });
+      const text = await res.text();
+      let json;
+      try { json = JSON.parse(text); } catch { json = { ok: false, status: res.status, raw: text }; }
+      setOutput(json);
+      setStatus(`${payload.action || 'request'} selesai. HTTP ${res.status}. ok=${json.ok}`);
+      return json;
+    }
+
+    async function runAction(action) {
+      const payload = { action };
+      if (action === 'context_export' || action === 'audit') {
+        payload.limit = Number(document.getElementById('limit').value || 300);
+        payload.sections = selectedSections();
+      }
+      if (action === 'schema_scan') {
+        payload.include_custom = true;
+      }
+      await postBridge(payload);
+    }
+
+    async function runRpcBox() {
+      let payload;
+      try { payload = JSON.parse(document.getElementById('rpcBox').value); }
+      catch (e) { setStatus('RPC JSON tidak valid: ' + e.message); return; }
+      await postBridge(payload);
+    }
+
+    function downloadOutput(defaultName) {
+      const text = document.getElementById('output').value.trim();
+      if (!text) { setStatus('Tidak ada output untuk didownload.'); return; }
+      let name = defaultName;
+      try {
+        const j = JSON.parse(text);
+        const profile = j.export_profile || j.audit_profile || j.bridge || 'lokalmart_bridge';
+        const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        name = `${profile}_${ts}.json`;
+      } catch {}
+      const blob = new Blob([text], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      setStatus('File JSON didownload: ' + name);
+    }
+
+    async function copyOutput() {
+      const text = document.getElementById('output').value.trim();
+      if (!text) { setStatus('Tidak ada output untuk dicopy.'); return; }
+      await navigator.clipboard.writeText(text);
+      setStatus('Output JSON dicopy.');
+    }
+
+    async function copyAssistantPrompt() {
+      const prompt = `Baca file JSON dari Lokalmart Odoo AI Bridge ini sebagai kondisi database Odoo Lokalmart saat ini.\n\nTolong lakukan:\n1. Ringkas kondisi struktur dan data.\n2. Temukan masalah prioritas: field custom, kategori produk teknis vs ecommerce, produk, partner, project/task, website/page.\n3. Jangan sarankan perubahan langsung yang berisiko.\n4. Buat rencana patch XLSX yang aman, migration-safe, dan dipisah per area: fields/ACL, produk, project/task, website/QWeb, role/Lokal ID.\n5. Perhatikan aturan importer Lokalmart: __action, _external_id, _model, custom x_, m2o _external_id, m2m _external_ids, Many2one custom required=False saat awal, dan QWeb XML-safe.`;
+      await navigator.clipboard.writeText(prompt);
+      setStatus('Prompt Asisten Lokalmart dicopy. Upload JSON output ke ChatGPT lalu tempel prompt ini.');
+    }
+
+    init();
+  </script>
+</body>
+</html>
