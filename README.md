@@ -182,3 +182,14 @@ Versi berikutnya boleh menambahkan mode write, tetapi sebaiknya tetap dengan:
 - Gunakan user Odoo khusus integrasi dengan hak akses terbatas.
 - Jangan aktifkan write endpoint sebelum audit dan approval flow siap.
 - Bila ingin dipakai sebagai Custom GPT Action, ubah `public/openapi.json` server URL ke domain Vercel kamu.
+
+
+## Jika muncul 404 NOT_FOUND di Vercel
+
+Buka `DEPLOY_FIX_404.md`. Ringkasnya: pastikan file `index.html`, `vercel.json`, `package.json`, dan folder `api/` berada di root project yang dideploy. Jika file berada di subfolder `lokalmart-odoo-ai-bridge/`, atur **Root Directory** Vercel ke folder tersebut lalu redeploy.
+
+URL test:
+
+```txt
+https://NAMA-PROJECT.vercel.app/api?action=health
+```

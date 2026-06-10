@@ -1,8 +1,8 @@
 {
   "name": "lokalmart-odoo-ai-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "Read-first Vercel bridge for Lokalmart Assistant to inspect Odoo safely.",
+  "description": "Read-first Vercel bridge for Asisten Lokalmart to inspect Odoo safely.",
   "type": "module",
   "scripts": {
     "dev": "vercel dev",

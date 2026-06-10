@@ -1,11 +1,16 @@
 {
   "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
     "api/bridge.js": {
       "maxDuration": 60
     }
   },
   "rewrites": [
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/api", "destination": "/api/bridge.js" },
+    { "source": "/api/:path*", "destination": "/api/bridge.js" },
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/app", "destination": "/index.html" }
   ]
 }

@@ -1,6 +1,6 @@
 import { XMLParser } from 'fast-xml-parser';
 
-const BRIDGE_VERSION = '0.1.0';
+const BRIDGE_VERSION = '0.1.1';
 const READ_METHODS = new Set([
   'fields_get',
   'search_read',
